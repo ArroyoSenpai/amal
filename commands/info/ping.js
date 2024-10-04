@@ -3,14 +3,14 @@ const { Utils } = require("devtools-ts");
 const utilites = new Utils();
 
 module.exports = {
-    name: "ping",
-    description: `Test the bots response time.`,
+    name: "بنق",
+    description: `اختبار وقت استجابة البوت.`, // وصف الأمر
     cooldown: 5000,
     async execute(client, message, args) {
         try {
-            message.reply({ content: `:ping_pong: Pong ${client.ws.ping} ms` })
+            message.reply({ content: `:ping_pong: بونج ${client.ws.ping} مللي ثانية` });
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     },
 };
