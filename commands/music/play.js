@@ -5,27 +5,36 @@ const { Utils } = require("devtools-ts");
 const utilites = new Utils();
 
 module.exports = {
-    name: "play",
-    description: "Add a song to queue and plays it.",
+    name: "شغل",
+    description: "إضافة أغنية إلى قائمة الانتظار وتشغيلها.",
     cooldown: 5000,
     aliases: ['p', 'ش', 'شغل'],
     async execute(client, message, args) {
         try {
-            if (message.guild.members.me.voice?.channelId && message.member.voice.channelId !== message.guild.members.me?.voice?.channelId) return message.reply({ content: `:no_entry_sign: You must be listening in \`${message.guild.members.me?.voice?.channel.name}\` to use that!` });
-            if (!message.member.voice.channel)
-                return message.reply({ content: ":no_entry_sign: You must join a voice channel to use that!" })
-            let player = args.slice(0).join(' ')
-            if (!player) return message.reply({ content: `:no_entry_sign: You should type song name or url.` })
+            if (message.guild.members.me.voice?.channelId && message.member.voice.channelId !== message.guild.members.me?.voice?.channelId) {
+                return message.reply({ content: `:no_entry_sign: يجب أن تكون في الاستماع إلى \`${message.guild.members.me?.voice?.channel.name}\` لاستخدام ذلك!` });
+            }
 
+            if (!message.member.voice.channel) {
+                return message.reply({ content: ":no_entry_sign: يجب عليك الانضمام إلى قناة صوت لاستخدام هذا!" });
+            }
 
-            const queue = distube.getQueue(message)
-            message.reply({ content: `:watch: Searching ... (\`${player}\`)` }).then(msg => {
+            let player = args.slice(0).join(' ');
+
+            if (!player) {
+                return message.reply({ content: `:no_entry_sign: يجب عليك كتابة اسم الأغنية أو الرابط.` });
+            }
+
+            const queue = distube.getQueue(message);
+
+            message.reply({ content: `:watch: جاري البحث ... (\`${player}\`)` }).then(msg => {
                 setTimeout(() => {
-                    msg.delete()
+                    msg.delete();
                 }, 3000);
-            }).catch(() => { });
+            }).catch(() => {});
 
             const voiceChannel = message.member?.voice?.channel;
+
             if (voiceChannel) {
                 await distube.play(voiceChannel, player, {
                     message,
@@ -34,8 +43,7 @@ module.exports = {
                 });
             }
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     },
 };
-

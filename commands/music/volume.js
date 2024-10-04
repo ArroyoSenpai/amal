@@ -5,30 +5,30 @@ const { Utils } = require("devtools-ts");
 const utilites = new Utils();
 
 module.exports = {
-    name: "volume",
-    description: "Changes/Shows the current volume.",
+    name: "مستوى",
+    description: "تغيير/عرض مستوى الصوت الحالي.",
     cooldown: 5000,
     aliases: ['vol'],
     async execute(client, message, args) {
         try {
-            if (message.guild.members.me.voice?.channelId && message.member.voice.channelId !== message.guild.members.me?.voice?.channelId) return message.reply({ content: `:no_entry_sign: You must be listening in \`${message.guild.members.me?.voice?.channel.name}\` to use that!` });
+            if (message.guild.members.me.voice?.channelId && message.member.voice.channelId !== message.guild.members.me?.voice?.channelId) return message.reply({ content: `:no_entry_sign: يجب أن تكون متصل بقناة الصوت \`${message.guild.members.me?.voice?.channel.name}\` لاستخدام هذا الأمر!` });
             if (!message.member.voice.channel)
-                return message.reply({ content: ":no_entry_sign: You must join a voice channel to use that!" })
+                return message.reply({ content: ":no_entry_sign: يجب عليك الانضمام إلى قناة صوتية لاستخدام هذا الأمر!" })
             const queue = distube.getQueue(message)
-            if (!queue) return message.reply({ content: `:no_entry_sign: There must be music playing to use that!` })
+            if (!queue) return message.reply({ content: `:no_entry_sign: يجب أن يكون هناك موسيقى تعمل لاستخدام هذا الأمر!` })
             const volume = parseInt(args[0]);
             if (!volume) {
-                return message.reply({ content: `:loud_sound: Volume: \`${queue.volume}\`%` });
+                return message.reply({ content: `:loud_sound: مستوى الصوت: \`${queue.volume}\`%` });
             }
             if (isNaN(volume)) {
-                return message.reply({ content: ':no_entry_sign: Please enter a valid number' });
+                return message.reply({ content: ':no_entry_sign: الرجاء إدخال رقم صحيح' });
             }
             if (volume < 0 || volume > 150 || isNaN(volume))
-                return message.reply({ content: ":no_entry_sign: **Volume must be a valid integer between 0 and 150!**" })
+                return message.reply({ content: ":no_entry_sign: **يجب أن يكون مستوى الصوت رقم صحيح بين 0 و 150!**" })
             if (volume < 0) volume = 0;
             if (volume > 150) volume = 150;
             db.set(`volume_${message.guild.id}`, volume)
-            message.reply(`:loud_sound: Volume changed from \`${queue.volume}\` to \`${volume}\``)
+            message.reply(`:loud_sound: تم تغيير مستوى الصوت من \`${queue.volume}\` إلى \`${volume}\``)
             distube.setVolume(message, volume);
         } catch (err) {
             console.log(err)

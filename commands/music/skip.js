@@ -1,27 +1,40 @@
 const { EmbedBuilder } = require("discord.js");
-const distube = require('../../client/distube')
+const distube = require('../../client/distube');
 const { Utils } = require("devtools-ts");
 const utilites = new Utils();
 
 module.exports = {
-    name: "skip",
-    description: "Skip the current song.",
+    name: "سكب",
+    description: "تخطي الأغنية الحالية.",
     cooldown: 5000,
     aliases: ['s', 'التالي', 'تخطي'],
     async execute(client, message, args) {
         try {
-            if (message.guild.members.me.voice?.channelId && message.member.voice.channelId !== message.guild.members.me?.voice?.channelId) return message.reply({ content: `:no_entry_sign: You must be listening in \`${message.guild.members.me?.voice?.channel.name}\` to use that!` });
-            if (!message.member.voice.channel)
-                return message.reply({ content: ":no_entry_sign: You must join a voice channel to use that!" })
-            const queue = distube.getQueue(message)
-            const song = queue.songs[0]
-            let name = song.name
-            if (!queue) return message.reply({ content: `:no_entry_sign: There must be music playing to use that!` })
-            if (!queue.autoplay && queue.songs.length <= 1) return message.reply({ content: `:no_entry_sign:  this is last song in queue list` });
-            message.reply({ content: `:notes: Skipped **${name}**` })
+            if (message.guild.members.me.voice?.channelId && message.member.voice.channelId !== message.guild.members.me?.voice?.channelId) {
+                return message.reply({ content: `:no_entry_sign: يجب أن تكون في الاستماع إلى \`${message.guild.members.me?.voice?.channel.name}\` لاستخدام ذلك!` });
+            }
+
+            if (!message.member.voice.channel) {
+                return message.reply({ content: ":no_entry_sign: يجب عليك الانضمام إلى قناة صوت لاستخدام هذا!" });
+            }
+
+            const queue = distube.getQueue(message);
+
+            if (!queue) {
+                return message.reply({ content: `:no_entry_sign: يجب أن يكون هناك موسيقى تعمل لاستخدام هذا!` });
+            }
+
+            const song = queue.songs[0];
+            let name = song.name;
+
+            if (!queue.autoplay && queue.songs.length <= 1) {
+                return message.reply({ content: `:no_entry_sign: هذه هي آخر أغنية في قائمة الانتظار` });
+            }
+
+            message.reply({ content: `:notes: تم تخطي **${name}**` });
             return distube.skip(message);
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     },
 };

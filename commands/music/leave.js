@@ -5,19 +5,30 @@ const { Utils } = require("devtools-ts");
 const utilites = new Utils();
 
 module.exports = {
-    name: "leave",
-    description: "leave the voice channel.",
+    name: "اطلع",
+    description: "مغادرة القناة الصوتية.",
     cooldown: 5000,
     async execute(client, message, args) {
         try {
-            if (message.guild.members.me.voice?.channelId !== message.member.voice.channelId) return message.reply({ content: `:no_entry_sign: I'm not there already \`${message.member.voice.channel.name}\`` });
-            if (message.guild.members.me.voice?.channelId && message.member.voice.channelId !== message.guild.members.me?.voice?.channelId) return message.reply({ content: `:no_entry_sign: You must be listening in \`${message.guild.members.me?.voice?.channel.name}\` to use that!` });
+            if (message.guild.members.me.voice?.channelId !== message.member.voice.channelId) {
+                return message.reply({ content: `:no_entry_sign: لست هناك بالفعل \`${message.member.voice.channel.name}\`` });
+            }
+
+            if (message.guild.members.me.voice?.channelId && message.member.voice.channelId !== message.guild.members.me?.voice?.channelId) {
+                return message.reply({ content: `:no_entry_sign: يجب أن تكون في الاستماع إلى \`${message.guild.members.me?.voice?.channel.name}\` لاستخدام ذلك!` });
+            }
+
             let channel = message.member.voice.channel;
-            if (!channel) return message.reply({ content: ":no_entry_sign: You must join a voice channel to use that!" });
-            distube.voices.leave(message.guild)
-            return message.reply({ content: `:white_check_mark: Succesfully leave \`${channel.name}\`` });
+
+            if (!channel) {
+                return message.reply({ content: ":no_entry_sign: يجب عليك الانضمام إلى قناة صوت لاستخدام هذا!" });
+            }
+
+            distube.voices.leave(message.guild);
+
+            return message.reply({ content: `:white_check_mark: تم مغادرة \`${channel.name}\` بنجاح` });
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     },
 };
