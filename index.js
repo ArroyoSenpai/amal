@@ -1,35 +1,31 @@
-const express = require('express');
-const app = express();
+    const express = require('express');
+    const colors = require("colors"); // استيراد المكتبة هنا
+    const app = express();
 
+    app.get('/', function (request, response) {
+      response.sendFile(__dirname + '/index.html');
+    });
 
-app.get('/', function (request, response) {
-  response.sendFile(__dirname + '/index.html');
-});
+    app.use('/ping', (req, res) => {
+      res.send(new Date());
+    });
 
-app.use('/ping', (req, res) => {
-  res.send(new Date());
-});
+    app.listen(9080, () => {
+      console.log(('Express is ready.').blue.bold);
+      console.log("this bot is Stop supported by [DevXor Team] https://discord.gg/devxor"); // طباعتها هنا
+    });
 
-app.listen(9080, () => {
-  console.log(('Express is ready.').blue.bold)
-});
+    // باقي الكود...
 
-const { Client, Collection, Partials, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events, EmbedBuilder } = require('discord.js');
+    const { Client, Collection, Partials, GatewayIntentBits } = require('discord.js');
+    const config = require("./config.json");
+    const { REST } = require('@discordjs/rest');
+    const { Routes } = require('discord-api-types/v9');
 
-const config = require("./config.json");
-const { glob } = require("glob");
-const { promisify } = require("util");
-const { joinVoiceChannel } = require('@discordjs/voice');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const db = require('quick.db');
-const colors = require("colors");
-
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
+    const client = new Client({
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildEmojisAndStickers,
     GatewayIntentBits.GuildIntegrations,
     GatewayIntentBits.GuildWebhooks,
@@ -127,12 +123,6 @@ client.slashCommands = new Collection();
 const commands = client.slashCommands.map(({ execute, ...data }) => data);
 
 // Register slash commands
-const rest = new REST({ version: '9' }).setToken(config.token || process.env.token);
-rest.put(
-  Routes.applicationGuildCommands(config.clientID, config.guildID),
-  { body: commands },
-).then(() => console.log('Successfully registered application commands.'))
-  .catch(console.error)
 
 
 setTimeout(() => {
@@ -144,6 +134,16 @@ setTimeout(() => {
   }
 }, 5 * 1000 * 60);
 
-client.login(config.token || process.env.token).catch((err) => {
+client.login(config.token || process.env.token).then((bot)=>{
+
+const rest = new REST({ version: '9' }).setToken(config.token || process.env.token);
+rest.put(
+  Routes.applicationGuildCommands(config.clientID, config.guildID),
+  { body: commands },
+).then(() => console.log('Successfully registered application commands.'))
+  .catch(console.error)
+  
+}).catch((err) => {
   console.log(err.message)
 })
+
